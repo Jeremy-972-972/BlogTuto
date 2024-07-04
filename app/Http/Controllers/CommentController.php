@@ -25,10 +25,20 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Post $post)
     {
-        //
-    }
+        $request->validate([
+            'content' => 'required']);
+           
+            $comment = new Comment([
+               'content' => $request->content,
+               'user_id' => auth()->id()
+            ]);
+           
+            $post->comments()->save($comment);
+            return redirect()->route('posts.show', $post->id)->with('success', 'Commentaire ajouté avec succès.');
+               }
+    
 
     /**
      * Display the specified resource.
